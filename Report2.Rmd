@@ -1,3 +1,7 @@
+### Find Reasons Behind Dramatic Difference between AQI Reported by U.S. and China
+#### Group1: Li Luo, Zhuangye Chen
+
+```{r setup}
 library(dplyr)
 library(ggplot2)
 aqidiff <- read.delim("data.txt", header = TRUE, stringsAsFactors = FALSE)
@@ -5,4 +9,4 @@ aqidiff <- aqidiff %>% mutate(aqi_diff = US_AQI - China_AQI) %>% mutate(Date = a
 str(aqidiff)
 summary(aqidiff)
 ggplot(aqidiff, aes(Date, aqi_diff)) + geom_line() +xlab("") + ylab("AQI Difference(U.S.-China)")
-
+```
