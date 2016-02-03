@@ -1,12 +1,23 @@
-### Find Reasons Behind Dramatic Difference between AQI Reported by U.S. and China
+### Explore Reasons Behind Dramatic Difference between AQI Reported by U.S. and China
 #### Group1: Li Luo, Zhuangye Chen
 
 ```{r setup}
-library(dplyr)
+suppressPackageStartupMessages(library(dplyr))
 library(ggplot2)
-aqidiff <- read.delim("data.txt", header = TRUE, stringsAsFactors = FALSE)
-aqidiff <- aqidiff %>% mutate(aqi_diff = US_AQI - China_AQI) %>% mutate(Date = as.Date(Date, "%m/%d/%Y"))
-str(aqidiff)
+library(readxl)
+aqidiff <- read_excel("aqi_raw.xlsx", sheet = 1)
+# Adjust PM2.5
+x <- c(0, 14.3, 28.6, 42.9, 56.3, 68.8, 81.3, 93.8, 106.3, 118.8, 131.3, 143.8, 157.1, 171.4, 185.7, 200)
+y <- c(0, 32, 62, 87, 108, 125, 141, 154, 159, 165, 171, 177, 182, 188, 194, 200)
+adj_lm <- lm(y~I(x^3)+I(x^2)+x+0)
+adj_china_aqi <- unlist(sapply(1:dim(aqidiff)[1], function(x) ifelse(aqidiff$Main_Pollutant[x] == "PM2.5" && !is.na(aqidiff$Main_Pollutant[x]) && aqidiff$China_AQI[x] < 200, predict(adj_lm, newdata = data.frame(x = aqidiff$China_AQI[x])), aqidiff$China_AQI[x])))
+
+aqidiff <- aqidiff %>% mutate(China_aqi_adj = adj_china_aqi) %>% mutate(aqi_diff = US_AQI - China_aqi_adj) %>% select(Date, China_AQI, US_AQI, China_aqi_adj, aqi_diff)
+head(aqidiff)
 summary(aqidiff)
-ggplot(aqidiff, aes(Date, aqi_diff)) + geom_line() +xlab("") + ylab("AQI Difference(U.S.-China)")
+ggplot(aqidiff, aes(Date, aqi_diff)) + geom_line() + xlab("") + ylab("AQI Difference(U.S.-China)")
 ```
+
+Chinese and U.S. governments use different methods to calculate Air Quality Index (AQI). While both indexes are based on the same formula (First calculate the sub-AQI for each pollutant and use the maximum one for the overall AQI, see https://en.wikipedia.org/wiki/Air_quality_index#Computing_the_AQI), they measure different types of particles and use different cutoff points in the calculation.
+
+To adjust for the difference in the calculation, we used linear regression of U.S. AQI on China AQI according the chart of different AQI's corresponding to the same PM2.5 concentration (http://gzaqi.sinaapp.com/static/html/compare.html). Since in this report, our main concern is PM2.5, at this point we only adjust for days when the main source of pollutant is PM2.5. In the future, we could use the similar method to adjust for other pollutants if needed.
