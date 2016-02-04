@@ -38,4 +38,4 @@ pvalue<-adf.test(zeromean)$p.value
 
 From the test result, the p-value is `r adf.test(zeromean)$p.value`,which means the data is stationary. Thus, we can conclude that the differences of AQI reported by China and US really exist.  
 
-Next, we will try to find out when the differences are relatively large and what reasons lead to this result.
+Next, we will try to find out when the differences are relatively large and what reasons lead to this result. Some useful references may be: Comparative Analysis and Inspiration of Air Quality Index Between China and America by GAO Qing-xian et al and ‘Effortless Perfection:’ Do Chinese cities manipulate air pollution data? by Ghanem and Zhang.
