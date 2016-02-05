@@ -33,7 +33,8 @@ aqidiff1<-aqidiff[-aa,]
 zeromean<-aqidiff1$aqi_diff-mean(aqidiff1$aqi_diff)
 #ts.plot(zeromean)
 library(tseries)
-pvalue<-adf.test(zeromean)$p.value
+pvalue <- adf.test(zeromean)$p.value
+pvalue
 ```
 
 From the test result, the p-value is `r adf.test(zeromean)$p.value`,which means the data is stationary. Thus, we can conclude that the differences of AQI reported by China and US really exist.  
