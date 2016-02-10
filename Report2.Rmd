@@ -52,3 +52,13 @@ Notice all 10 days are in 2014. If we list top 10 AQI difference in 2015:
 ```{r}
 aqidiff %>% filter(strftime(Date, format = "%Y") == 2015) %>% arrange(desc(aqi_diff)) %>% head(10)
 ```
+
+#decompose seasonal trend
+
+```{r}
+aqidiff.ts<-ts(aqidiff$aqi_diff,frequency=365)
+aqidiff.de<-decompose(aqidiff,type="additive")
+plot(aqidiff.de)
+```
+
+We see there is a clear descreasing from the second half of year 2014 to the first half of 2015 which correspond to the fact that the top 10 differences are all in 2014. The difference is getting smaller through days.
