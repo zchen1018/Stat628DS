@@ -8,21 +8,61 @@ Overview
 ========================================================
 
 - Background
-- Adjustment Based On Cut-off Values
+- Adjustment Based On Breakpoints
 - Dates with 10 Biggest AQI Difference
 - Stationary Test
 - Seasonal Trend Decomposition
 
 Background
 ========================================================
+How is Air Quality Index (AQI) calculated?
 
-```{r}
-summary(cars)
-```
+- For the pollutant $p$, define IAQI (Individual AQI) as:
 
-Slide With Plot
+$$
+IAQI_p = \frac{I_{high} - I_{low}}{C_{high} - C_{low}} (C - C_{low}) + I_{low}
+$$
+$C$ = the pollutant concentration <br/>
+$C_{low}$= the concentration breakpoint that is $\le C$ <br/>
+$C_{high}$= the concentration breakpoint that is $\ge C$ <br/>
+$I_{low}$= the index breakpoint corresponding to $C_{low}$ <br/>
+$I_{high}$= the index breakpoint corresponding to $C_{high}$
+
+- $$AQI = max\{ IAQI_1, IAQI_2, IAQI_3,\dots, IAQI_n\}$$
+
+Different Breakpoints
 ========================================================
+PM2.5 ($\mu g/m^3$)  | AQI by China | AQI by U.S.
+------------- | ------------- | -------------
+0 | 0	|	0
+10|14.3|32
+30|42.9|87
+50|68.8|125
+70|93.8|154
+90|118.8|165
+100|131.3|171
+120|157.1|182
+150|**200.0**|**200**
+170|220.0|220
+200|250.0|250
+300|350.0|350
 
-```{r, echo=FALSE}
-plot(cars)
+Adjustment Based On Breakpoints
+========================================================
+```{r, echo=FALSE, fig.align='center', fig.width = 9, fig.height = 7}
+library(ggplot2)
+x <- c(0, 14.3, 28.6, 42.9, 56.3, 68.8, 81.3, 93.8, 106.3, 118.8, 131.3, 143.8, 157.1, 171.4, 185.7, 200)
+y <- c(0, 32, 62, 87, 108, 125, 141, 154, 159, 165, 171, 177, 182, 188, 194, 200)
+plot(x, y, pch = 19, xlab = "AQI by China", ylab = "AQI by U.S.")
+adj_lm <- lm(y~I(x^3)+I(x^2)+x+0)
 ```
+
+$$
+{\tiny
+AQI_{U.S.} = 2.54\times 10^{-5} AQI_{China}^3 - 1.31\times 10^{-2} AQI_{China}^2 + 2.59 AQI_{China}
+}
+$$
+
+10 Biggest AQI Difference In Photos
+========================================================
+![alt text](beijing365-2014.jpg)

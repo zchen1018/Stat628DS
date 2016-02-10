@@ -8,30 +8,55 @@ Overview
 ========================================================
 
 - Background
-- Adjustment Based On Cut-off Values
+- Adjustment Based On Breakpoints
 - Dates with 10 Biggest AQI Difference
 - Stationary Test
 - Seasonal Trend Decomposition
 
-Slide With Code
+Background
 ========================================================
+How is Air Quality Index (AQI) calculated?
 
+- For the pollutant $p$, define IAQI (Individual AQI) as:
 
-```r
-summary(cars)
-```
+$$
+IAQI_p = \frac{I_{high} - I_{low}}{C_{high} - C_{low}} (C - C_{low}) + I_{low}
+$$
+$C$ = the pollutant concentration <br/>
+$C_{low}$= the concentration breakpoint that is $\le C$ <br/>
+$C_{high}$= the concentration breakpoint that is $\ge C$ <br/>
+$I_{low}$= the index breakpoint corresponding to $C_{low}$ <br/>
+$I_{high}$= the index breakpoint corresponding to $C_{high}$
 
-```
-     speed           dist       
- Min.   : 4.0   Min.   :  2.00  
- 1st Qu.:12.0   1st Qu.: 26.00  
- Median :15.0   Median : 36.00  
- Mean   :15.4   Mean   : 42.98  
- 3rd Qu.:19.0   3rd Qu.: 56.00  
- Max.   :25.0   Max.   :120.00  
-```
+- $$AQI = max\{ IAQI_1, IAQI_2, IAQI_3,\dots, IAQI_n\}$$
 
-Slide With Plot
+Different Breakpoints
 ========================================================
+PM2.5 ($\mu g/m^3$)  | AQI by China | AQI by U.S.
+------------- | ------------- | -------------
+0 | 0	|	0
+10|14.3|32
+30|42.9|87
+50|68.8|125
+70|93.8|154
+90|118.8|165
+100|131.3|171
+120|157.1|182
+150|**200.0**|**200**
+170|220.0|220
+200|250.0|250
+300|350.0|350
 
-![plot of chunk unnamed-chunk-2](Group1Pres-figure/unnamed-chunk-2-1.png) 
+Adjustment Based On Breakpoints
+========================================================
+<img src="Group1Pres-figure/unnamed-chunk-1-1.png" title="plot of chunk unnamed-chunk-1" alt="plot of chunk unnamed-chunk-1" style="display: block; margin: auto;" />
+
+$$
+{\tiny
+AQI_{U.S.} = 2.54\times 10^{-5} AQI_{China}^3 - 1.31\times 10^{-2} AQI_{China}^2 + 2.59 AQI_{China}
+}
+$$
+
+10 Biggest AQI Difference In Photos
+========================================================
+![alt text](beijing365-2014.jpg)
