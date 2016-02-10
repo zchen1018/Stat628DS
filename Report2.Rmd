@@ -31,9 +31,7 @@ To adjust for the difference in the calculation, we used linear regression of U.
 In order to check if the differences in AQI is not zero, we need to check the `aqidiff` time series data is stationary and the mean is away from zero. Here, we first delete the overall mean of `aqidiff` `r mean(aqidiff$aqi_diff,na.rm=TRUE)` from the original data of `aqidiff` and then use ADF test to check if this series is stationary with mean zero. With NA in the data, we need to delete all the NA rows in order to do the ADF test. 
 
 ```{r, fig.height=3, fig.width=5, fig.align='center'}
-aa<-which(is.na(aqidiff[,2]))
-aqidiff1<-aqidiff[-aa,]
-zeromean<-aqidiff1$aqi_diff-mean(aqidiff1$aqi_diff)
+zeromean <- aqidiff$aqi_diff-mean(aqidiff$aqi_diff)
 #ts.plot(zeromean)
 library(tseries)
 pvalue <- adf.test(zeromean)$p.value
@@ -46,5 +44,10 @@ Next, we will try to find out when the differences are relatively large and what
 
 ##### 2/10
 ```{r}
-
+# top 10 days by AQI diff
+aqidiff %>% arrange(desc(aqi_diff)) %>% head(10)
+```
+Notice all 10 days are in 2014. If we list top 10 AQI difference in 2015:
+```{r}
+aqidiff %>% filter(strftime(Date, format = "%Y") == 2015) %>% arrange(desc(aqi_diff)) %>% head(10)
 ```
