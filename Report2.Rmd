@@ -9,6 +9,9 @@ suppressPackageStartupMessages(library(dplyr))
 library(ggplot2)
 library(readxl)
 aqidiff <- read_excel("aqi_raw.xlsx", sheet = 1)
+# Inpute missing values from other data sources
+aqidiff[is.na(aqidiff$China_AQI), "China_AQI"] <- c(330, 215, 209, 186, 181, 71, 33)
+
 # Adjust PM2.5
 x <- c(0, 14.3, 28.6, 42.9, 56.3, 68.8, 81.3, 93.8, 106.3, 118.8, 131.3, 143.8, 157.1, 171.4, 185.7, 200)
 y <- c(0, 32, 62, 87, 108, 125, 141, 154, 159, 165, 171, 177, 182, 188, 194, 200)
@@ -40,3 +43,8 @@ pvalue
 From the test result, the p-value is `r adf.test(zeromean)$p.value`,which means the data is stationary. Thus, we can conclude that the differences of AQI reported by China and US really exist.  
 
 Next, we will try to find out when the differences are relatively large and what reasons lead to this result. Some useful references may be: Comparative Analysis and Inspiration of Air Quality Index Between China and America by GAO Qing-xian et al and ‘Effortless Perfection:’ Do Chinese cities manipulate air pollution data? by Ghanem and Zhang.
+
+##### 2/10
+```{r}
+
+```
