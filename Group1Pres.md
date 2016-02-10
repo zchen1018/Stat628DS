@@ -1,17 +1,17 @@
-Group1Pres
+Explore Reasons Behind Dramatic Difference between AQI's by U.S. and Chinese government
 ========================================================
 author: Li Luo, Zhuangye Chen
 date: 02/10/2016
+font-family: 'Helvetica'
 
-First Slide
+Overview
 ========================================================
 
-For more details on authoring R presentations click the
-**Help** button on the toolbar.
-
-- Bullet 1
-- Bullet 2
-- Bullet 3
+- Background
+- Adjustment Based On Cut-off Values
+- Dates with 10 Biggest AQI Difference
+- Stationary Test
+- Seasonal Trend Decomposition
 
 Slide With Code
 ========================================================
