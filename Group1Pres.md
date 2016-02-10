@@ -60,3 +60,41 @@ $$
 10 Biggest AQI Difference In Photos
 ========================================================
 ![alt text](beijing365-2014.jpg)
+
+Stationary Test
+========================================================
+
+In order to see if the difference in AQI reported by China and U.S.exsit. We need to check the stationarity of this time series. 
+Here we use the ADF test to test the stationarity.  
+
+<img src="Group1Pres-figure/unnamed-chunk-2-1.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" />
+
+Stationary Test Result
+========================================================
+
+
+```r
+zeromean <- aqidiff$aqi_diff-mean(aqidiff$aqi_diff)
+library(tseries)
+pvalue <- adf.test(zeromean)$p.value
+pvalue
+```
+
+```
+[1] 0.01
+```
+
+The test shows the data is stationary. Taking into account of difference average  12.1317722, we can conclude that the difference of AQI reported by China and US really exists.
+
+Seasonal Trend Decomposition
+========================================================
+
+
+```r
+aqidiff.ts<-ts(aqidiff$aqi_diff,frequency=365)
+aqidiff.de<-decompose(aqidiff.ts,type="additive")
+plot(aqidiff.de)
+```
+
+<img src="Group1Pres-figure/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
+
