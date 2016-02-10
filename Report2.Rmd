@@ -47,6 +47,7 @@ Next, we will try to find out when the differences are relatively large and what
 # top 10 days by AQI diff
 aqidiff %>% arrange(desc(aqi_diff)) %>% head(10)
 ```
+
 Notice all 10 days are in 2014. If we list top 10 AQI difference in 2015:
 ```{r}
 aqidiff %>% filter(strftime(Date, format = "%Y") == 2015) %>% arrange(desc(aqi_diff)) %>% head(10)
