@@ -70,10 +70,9 @@ $$
 Stationary Test
 ========================================================
 
-In order to see if the difference in AQI reported by China and U.S.exsit. We need to check the stationarity of this time series. 
-Here we use the ADF test to test the stationarity.  
+In order to see if the difference in AQI reported by China and U.S. exsits, we check the stationarity of this time series with ADF test. 
 
-```{r,echo=FALSE,message=FALSE,fig.align='center'}
+```{r,echo=FALSE,message=FALSE,fig.align='center',fig.width =10, fig.height = 6}
 suppressPackageStartupMessages(library(dplyr))
 library(ggplot2)
 library(readxl)
@@ -106,7 +105,7 @@ The test shows the data is stationary. Taking into account of difference average
 Seasonal Trend Decomposition
 ========================================================
 
-```{r,fig.align='center',fig.width=4,fig.height=6}
+```{r,fig.align='center',fig.width=10,fig.height=6}
 aqidiff.ts<-ts(aqidiff$aqi_diff,frequency=365)
 aqidiff.de<-decompose(aqidiff.ts,type="additive")
 plot(aqidiff.de)

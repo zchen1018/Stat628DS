@@ -64,8 +64,7 @@ $$
 Stationary Test
 ========================================================
 
-In order to see if the difference in AQI reported by China and U.S.exsit. We need to check the stationarity of this time series. 
-Here we use the ADF test to test the stationarity.  
+In order to see if the difference in AQI reported by China and U.S. exsits, we check the stationarity of this time series with ADF test. 
 
 <img src="Group1Pres-figure/unnamed-chunk-2-1.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" />
 
