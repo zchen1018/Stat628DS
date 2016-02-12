@@ -7,7 +7,7 @@ Project repository for projects of Stat628 (Data Science Practicum) at UW-Madiso
 2. Subtract the mean of the difference time series and test the stationarity test
 
 ##### Sources of Data
-U.S.:
+U.S.:http://www.stateair.net/web/post/1/1.html
 
-China: test
+China: http://datacenter.mep.gov.cn/report/air_daily/air_dairy_en.jsp
 
