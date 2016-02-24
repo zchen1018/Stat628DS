@@ -18,14 +18,16 @@ y <- c(0, 32, 62, 87, 108, 125, 141, 154, 159, 165, 171, 177, 182, 188, 194, 200
 
 adj_lm <- lm(y~I(x^3)+I(x^2)+x+0)
 # Scatterplot and regression line
-x_all <- c(x, seq(200, 300, 10))
-y_all <- c(y, seq(200, 300, 10))
 plot(x, y, pch = 19, xlab = "AQI by China", ylab = "Adjusted AQI by China",
      xlim = c(0, 300), ylim = c(0, 300))
-lines(x_all, c(predict(adj_lm), seq(200, 300, 10)), col = "red", lwd = 2)
+lines(x, predict(adj_lm), col = "red", lwd = 2)
+lines(seq(200, 300, 10), seq(200, 300, 10), col = "blue", lwd = 2)
 abline(v = 200, lty = 2)
-legend("topleft", col = c("red", NA), lwd = 2, 
-       legend = c("Cubic Regression Line", expression(R^2 ~ "= 0.9998")), cex = 0.7)
+legend("topleft", col = c("red", NA, "blue"), lwd = 2, 
+       legend = c("Cubic Regression Line", 
+                  expression(R^2 ~ "= 0.9998"),
+                  expression("No Adjustment after AQI" >= 200)
+                  ), cex = 0.7)
 
 adj_china_aqi <- unlist(sapply(1:dim(aqidiff)[1], function(x) ifelse(aqidiff$Main_Pollutant[x] == "PM2.5" && !is.na(aqidiff$Main_Pollutant[x]) && aqidiff$China_AQI[x] < 200, predict(adj_lm, newdata = data.frame(x = aqidiff$China_AQI[x])), aqidiff$China_AQI[x])))
 aqidiff <- aqidiff %>% mutate(China_aqi_adj = adj_china_aqi) %>% mutate(aqi_diff = US_AQI - China_aqi_adj) %>% select(Date, China_AQI, US_AQI, China_aqi_adj, aqi_diff)
