@@ -20,8 +20,9 @@ adj_lm <- lm(y~I(x^3)+I(x^2)+x+0)
 # Scatterplot and regression line
 x_all <- c(x, seq(200, 300, 10))
 y_all <- c(y, seq(200, 300, 10))
-plot(x_all, y_all, pch = 19, xlab = "AQI by China", ylab = "Adjusted AQI by China")
-lines(x, predict(adj_lm), col = "red", lwd = 2)
+plot(x, y, pch = 19, xlab = "AQI by China", ylab = "Adjusted AQI by China",
+     xlim = c(0, 300), ylim = c(0, 300))
+lines(x_all, c(predict(adj_lm), seq(200, 300, 10)), col = "red", lwd = 2)
 abline(v = 200, lty = 2)
 legend("topleft", col = c("red", NA), lwd = 2, 
        legend = c("Cubic Regression Line", expression(R^2 ~ "= 0.9998")), cex = 0.7)
