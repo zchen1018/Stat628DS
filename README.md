@@ -13,6 +13,8 @@ U.S.:http://www.stateair.net/web/post/1/1.html
 
 China: http://datacenter.mep.gov.cn/report/air_daily/air_dairy_en.jsp
 
+Breakpoints Comparison: http://gzaqi.sinaapp.com/static/html/compare.html
+
 ##### Report Content
 1. Background
 2. Adjustment Based On Breakpoints
