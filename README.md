@@ -15,9 +15,19 @@ China: http://datacenter.mep.gov.cn/report/air_daily/air_dairy_en.jsp
 
 Breakpoints Comparison: http://gzaqi.sinaapp.com/static/html/compare.html
 
-##### Report Content
+##### Presentation Content
 1. Background
 2. Adjustment Based On Breakpoints
 3. Dates with 10 Biggest AQI Difference
 4. Stationary Test
 5. Seasonal Trend Decomposition
+
+##### Report Content
+1. Abstract
+2. Introduction
+3. Data Preparation
+4. Methodology
+5. Results
+6. Conclusions
+7. References
+
