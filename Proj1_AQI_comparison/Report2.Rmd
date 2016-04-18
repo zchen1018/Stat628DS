@@ -1,0 +1,75 @@
+---
+output: html_document
+---
+### Explore Reasons Behind Dramatic Difference between AQI Reported by U.S. and China
+#### Group1: Li Luo, Zhuangye Chen
+
+```{r setup, fig.height=3, fig.width=5, fig.align='center'}
+suppressPackageStartupMessages(library(dplyr))
+library(ggplot2)
+library(readxl)
+aqidiff <- read_excel("aqi_raw.xlsx", sheet = 1)
+# Inpute missing values from other data sources
+aqidiff[is.na(aqidiff$China_AQI), "China_AQI"] <- c(330, 215, 209, 186, 181, 71, 33)
+
+# Adjust PM2.5
+x <- c(0, 14.3, 28.6, 42.9, 56.3, 68.8, 81.3, 93.8, 106.3, 118.8, 131.3, 143.8, 157.1, 171.4, 185.7, 200)
+y <- c(0, 32, 62, 87, 108, 125, 141, 154, 159, 165, 171, 177, 182, 188, 194, 200)
+
+adj_lm <- lm(y~I(x^3)+I(x^2)+x+0)
+# Scatterplot and regression line
+plot(x, y, pch = 19, xlab = "AQI by China", ylab = "Adjusted AQI by China",
+     xlim = c(0, 300), ylim = c(0, 300))
+lines(x, predict(adj_lm), col = "red", lwd = 2)
+lines(seq(200, 300, 10), seq(200, 300, 10), col = "blue", lwd = 2)
+abline(v = 200, lty = 2)
+legend("topleft", col = c("red", "blue"), lwd = 2, 
+       legend = c(expression("Cubic Regression Line (" ~ R^2 ~ "= 0.9998)"),
+                  expression("No Adjustment after AQI" >= 200)
+                  ), cex = 0.7)
+
+adj_china_aqi <- unlist(sapply(1:dim(aqidiff)[1], function(x) ifelse(aqidiff$Main_Pollutant[x] == "PM2.5" && !is.na(aqidiff$Main_Pollutant[x]) && aqidiff$China_AQI[x] < 200, predict(adj_lm, newdata = data.frame(x = aqidiff$China_AQI[x])), aqidiff$China_AQI[x])))
+aqidiff <- aqidiff %>% mutate(China_aqi_adj = adj_china_aqi) %>% mutate(aqi_diff = US_AQI - China_aqi_adj) %>% select(Date, China_AQI, US_AQI, China_aqi_adj, aqi_diff)
+#head(aqidiff)
+#summary(aqidiff)
+ggplot(aqidiff, aes(Date, aqi_diff)) + geom_line() + xlab("") + ylab("AQI Difference(U.S.-China)")
+```
+
+Chinese and U.S. governments use different methods to calculate Air Quality Index (AQI). While both indexes are based on the same formula (First calculate the sub-AQI for each pollutant and use the maximum one for the overall AQI, see https://en.wikipedia.org/wiki/Air_quality_index#Computing_the_AQI), they measure different types of particles and use different cutoff points in the calculation.
+
+To adjust for the difference in the calculation, we used linear regression of U.S. AQI on China AQI according the chart of different AQI's corresponding to the same PM2.5 concentration (http://gzaqi.sinaapp.com/static/html/compare.html). Since in this report, our main concern is PM2.5, at this point we only adjust for days when the main source of pollutant is PM2.5. In the future, we could use the similar method to adjust for other pollutants if needed.  
+
+In order to check if the differences in AQI is not zero, we need to check the `aqidiff` time series data is stationary and the mean is away from zero. Here, we first delete the overall mean of `aqidiff` `r mean(aqidiff$aqi_diff,na.rm=TRUE)` from the original data of `aqidiff` and then use ADF test to check if this series is stationary with mean zero. With NA in the data, we need to delete all the NA rows in order to do the ADF test. 
+
+```{r, fig.height=3, fig.width=5, fig.align='center'}
+zeromean <- aqidiff$aqi_diff-mean(aqidiff$aqi_diff)
+#ts.plot(zeromean)
+library(tseries)
+pvalue <- adf.test(zeromean)$p.value
+pvalue
+```
+
+From the test result, the p-value is `r adf.test(zeromean)$p.value`,which means the data is stationary. Thus, we can conclude that the differences of AQI reported by China and US really exist.  
+
+Next, we will try to find out when the differences are relatively large and what reasons lead to this result. Some useful references may be: Comparative Analysis and Inspiration of Air Quality Index Between China and America by GAO Qing-xian et al and ‘Effortless Perfection:’ Do Chinese cities manipulate air pollution data? by Ghanem and Zhang.
+
+##### 2/10
+```{r}
+# top 10 days by AQI diff
+aqidiff %>% arrange(desc(aqi_diff)) %>% head(10)
+```
+
+Notice all 10 days are in 2014. If we list top 10 AQI difference in 2015:
+```{r}
+aqidiff %>% filter(strftime(Date, format = "%Y") == 2015) %>% arrange(desc(aqi_diff)) %>% head(10)
+```
+
+#decompose seasonal trend
+
+```{r}
+aqidiff.ts<-ts(aqidiff$aqi_diff,frequency=365)
+aqidiff.de<-decompose(aqidiff,type="additive")
+plot(aqidiff.de)
+```
+
+We see there is a clear descreasing from the second half of year 2014 to the first half of 2015 which correspond to the fact that the top 10 differences are all in 2014. The difference is getting smaller through days.
